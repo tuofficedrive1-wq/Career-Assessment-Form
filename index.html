@@ -292,6 +292,11 @@
 
     .spinner { display: inline-block; width: 15px; height: 15px; border: 2px solid rgba(0,0,0,0.2); border-top-color: currentColor; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-left: 8px; }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Dropdown loading */
+    select:disabled { opacity: 0.5; cursor: not-allowed; }
+    .dropdown-loading { font-size: 11px; color: var(--text-mid); margin-top: 4px; display: none; }
+    .dropdown-loading.show { display: block; }
   </style>
 </head>
 <body>
@@ -356,6 +361,21 @@
           <div class="form-group">
             <label>Role Model Career Person</label>
             <input type="text" name="role_model" placeholder="Kisi ka naam" />
+          </div>
+
+          <div class="form-group">
+            <label>Region <span style="font-weight:400;color:var(--text-mid)">(Apna Region chunein)</span></label>
+            <select name="region" id="regionSelect" required>
+              <option value="">-- Pehle load ho raha hai... --</option>
+            </select>
+            <div class="dropdown-loading show" id="regionLoading">⏳ Regions load ho rahi hain...</div>
+          </div>
+
+          <div class="form-group">
+            <label>Jamia <span style="font-weight:400;color:var(--text-mid)">(Region ke baad Jamia chunein)</span></label>
+            <select name="jamia" id="jamiaSelect" required disabled>
+              <option value="">-- Pehle Region chunein --</option>
+            </select>
           </div>
 
         </div>
@@ -615,9 +635,68 @@
 </div>
 
 <script>
-  // ⚠️ Replace with your deployed Google Apps Script Web App URL
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby9Ku8-u33ClF5XqWrDxfuNgA2DD_xquntsmzZ2NfAzPJSaxGXmcFAk_oh7XUK4bxdCXA/exec";
 
+  // ── Region / Jamia data load ──────────────────────────────────────────────
+  let regionJamiaMap = {}; // { "Region Name": ["Jamia1", "Jamia2", ...] }
+
+  async function loadRegionJamia() {
+    const regionSel = document.getElementById("regionSelect");
+    const jamiasel  = document.getElementById("jamiaSelect");
+    const loadingEl = document.getElementById("regionLoading");
+
+    try {
+      const res  = await fetch(SCRIPT_URL + "?action=getRegionJamia");
+      const data = await res.json();
+
+      // Build map from array of {region, jamia} objects
+      regionJamiaMap = {};
+      data.forEach(row => {
+        const r = (row.region || "").trim();
+        const j = (row.jamia  || "").trim();
+        if (!r) return;
+        if (!regionJamiaMap[r]) regionJamiaMap[r] = [];
+        if (j) regionJamiaMap[r].push(j);
+      });
+
+      // Populate region dropdown
+      regionSel.innerHTML = '<option value="">-- Region chunein --</option>';
+      Object.keys(regionJamiaMap).forEach(r => {
+        const opt = document.createElement("option");
+        opt.value = opt.textContent = r;
+        regionSel.appendChild(opt);
+      });
+
+      loadingEl.classList.remove("show");
+      regionSel.disabled = false;
+
+    } catch (err) {
+      loadingEl.textContent = "❌ Data load nahi hua. Page refresh karein.";
+    }
+  }
+
+  // When region changes, update jamia dropdown
+  document.getElementById("regionSelect").addEventListener("change", function() {
+    const jamiasel = document.getElementById("jamiaSelect");
+    const selected = this.value;
+
+    jamiasel.innerHTML = '<option value="">-- Jamia chunein --</option>';
+    jamiasel.disabled = true;
+
+    if (selected && regionJamiaMap[selected]) {
+      regionJamiaMap[selected].forEach(j => {
+        const opt = document.createElement("option");
+        opt.value = opt.textContent = j;
+        jamiasel.appendChild(opt);
+      });
+      jamiasel.disabled = false;
+    }
+  });
+
+  // Load on page ready
+  loadRegionJamia();
+
+  // ── Form Submit ───────────────────────────────────────────────────────────
   document.getElementById("assessmentForm").addEventListener("submit", async function(e) {
     e.preventDefault();
     const btn = document.getElementById("submitBtn");
@@ -627,6 +706,18 @@
     if (!name) {
       statusMsg.className = "status-msg error";
       statusMsg.textContent = "⚠️ Apna naam zaroor darj karein.";
+      return;
+    }
+
+    if (!this.elements["region"].value) {
+      statusMsg.className = "status-msg error";
+      statusMsg.textContent = "⚠️ Region zaroor chunein.";
+      return;
+    }
+
+    if (!this.elements["jamia"].value) {
+      statusMsg.className = "status-msg error";
+      statusMsg.textContent = "⚠️ Jamia zaroor chunein.";
       return;
     }
 
@@ -663,6 +754,8 @@
       Timestamp:               new Date().toLocaleString("en-PK"),
       Naam:                    name,
       Umar:                    this.elements["age"].value,
+      Region:                  this.elements["region"].value,
+      Jamia:                   this.elements["jamia"].value,
       Class_Specialization:    this.elements["class_specialization"].value,
       School_Education:        this.elements["school_education"].value,
       Languages_Known:         this.elements["languages_known"].value,
@@ -699,6 +792,9 @@
       statusMsg.className = "status-msg success";
       statusMsg.textContent = "✅ Aap ka form kamyabi se jama ho gaya! Jazak Allah Khairan.";
       document.getElementById("assessmentForm").reset();
+      // Reset jamia dropdown
+      document.getElementById("jamiaSelect").innerHTML = '<option value="">-- Pehle Region chunein --</option>';
+      document.getElementById("jamiaSelect").disabled = true;
     } catch (err) {
       statusMsg.className = "status-msg error";
       statusMsg.textContent = "❌ Kuch ghalti hui. Dobara koshish karein.";
