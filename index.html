@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JTM Career Assessment Form</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green-dark: #1a4731;
+      --green-mid: #2d7a4f;
+      --green-light: #4caf7d;
+      --gold: #c9a84c;
+      --gold-light: #f0d080;
+      --cream: #faf7f0;
+      --white: #ffffff;
+      --text-dark: #1a1a1a;
+      --text-mid: #555;
+      --border: #d4c9a8;
+      --shadow: 0 4px 24px rgba(26,71,49,0.10);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--cream);
+      font-family: 'Inter', sans-serif;
+      color: var(--text-dark);
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+      color: var(--white);
+      padding: 36px 24px 30px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -40px; left: -40px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(201,168,76,0.12);
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; right: -30px;
+      width: 260px; height: 260px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+    }
+    .header-logo {
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--gold-light);
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      position: relative; z-index: 1;
+    }
+    .header h1 {
+      font-size: clamp(20px, 5vw, 30px);
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 8px;
+      position: relative; z-index: 1;
+    }
+    .header-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.75);
+      position: relative; z-index: 1;
+    }
+    .gold-line {
+      width: 60px; height: 3px;
+      background: var(--gold);
+      margin: 14px auto 0;
+      border-radius: 2px;
+      position: relative; z-index: 1;
+    }
+
+    /* Container */
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 28px 16px 60px;
+    }
+
+    /* Section Cards */
+    .section-card {
+      background: var(--white);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      margin-bottom: 28px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .section-header {
+      background: linear-gradient(90deg, var(--green-dark), var(--green-mid));
+      color: var(--white);
+      padding: 16px 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-num {
+      background: var(--gold);
+      color: var(--green-dark);
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .section-title { font-size: 17px; font-weight: 700; }
+    .section-subtitle { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+    .section-body { padding: 22px; }
+
+    /* Form Fields */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 540px) {
+      .form-grid { grid-template-columns: 1fr; }
+    }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green-dark);
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--text-dark);
+      background: var(--cream);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--green-mid);
+      box-shadow: 0 0 0 3px rgba(45,122,79,0.12);
+    }
+    textarea { resize: vertical; min-height: 70px; }
+
+    /* Skill Rating */
+    .skill-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 0;
+      border-bottom: 1px dashed var(--border);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .skill-row:last-child { border-bottom: none; }
+    .skill-name { flex: 1; min-width: 160px; }
+    .skill-name .main { font-size: 14px; font-weight: 600; color: var(--green-dark); }
+    .skill-name .sub { font-size: 11px; color: var(--text-mid); margin-top: 2px; }
+    .skill-options {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .skill-option input[type="radio"] { display: none; }
+    .skill-option label {
+      display: flex; align-items: center; justify-content: center;
+      padding: 7px 16px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.18s;
+      background: var(--cream);
+      color: var(--text-mid);
+      white-space: nowrap;
+    }
+    .skill-option input[value="Weak"]:checked + label   { background: #ffe5e5; border-color: #e55; color: #c00; }
+    .skill-option input[value="Average"]:checked + label { background: #fff8e0; border-color: #c9a84c; color: #7a5c00; }
+    .skill-option input[value="Strong"]:checked + label  { background: #e0f5ea; border-color: var(--green-light); color: var(--green-dark); }
+    .skill-option label:hover { border-color: var(--green-mid); }
+
+    /* Career Checkboxes */
+    .career-options { display: flex; flex-direction: column; gap: 10px; }
+    .career-option { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 10px 12px; border-radius: 10px; border: 1.5px solid transparent; transition: border-color 0.18s, background 0.18s; }
+    .career-option:hover { background: #f0f9f4; border-color: var(--green-light); }
+    .career-option input[type="checkbox"] { display: none; }
+    .career-check-box {
+      width: 22px; height: 22px; flex-shrink: 0;
+      border: 2px solid var(--border);
+      border-radius: 5px;
+      background: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.18s;
+      margin-top: 1px;
+    }
+    .career-option input:checked ~ .career-check-box {
+      background: var(--green-mid);
+      border-color: var(--green-mid);
+    }
+    .career-check-box::after { content: '✓'; color: white; font-size: 13px; opacity: 0; transition: opacity 0.15s; }
+    .career-option input:checked ~ .career-check-box::after { opacity: 1; }
+    .career-text .main { font-size: 14px; color: var(--green-dark); font-weight: 600; }
+    .career-text .sub { font-size: 11px; color: var(--text-mid); margin-top: 2px; }
+
+    /* Priority Ranking */
+    .priority-note {
+      font-size: 12px;
+      color: #7a5c00;
+      margin-bottom: 16px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid var(--gold);
+      border-radius: 7px;
+      padding: 9px 13px;
+    }
+    .priority-rows { display: flex; flex-direction: column; gap: 10px; }
+    .priority-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      background: var(--cream);
+    }
+    .priority-row select {
+      width: 68px;
+      flex-shrink: 0;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--green-dark);
+      padding: 6px 8px;
+    }
+    .priority-text .main { font-size: 14px; color: var(--green-dark); font-weight: 600; }
+    .priority-text .sub { font-size: 11px; color: var(--text-mid); margin-top: 2px; }
+
+    /* Submit */
+    .submit-wrap { text-align: center; margin-top: 10px; }
+    .btn-submit {
+      background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+      color: var(--white);
+      border: none;
+      padding: 15px 50px;
+      font-size: 16px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(26,71,49,0.25);
+      transition: transform 0.15s, box-shadow 0.15s;
+      letter-spacing: 0.5px;
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(26,71,49,0.3); }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    /* Status */
+    .status-msg {
+      display: none;
+      margin-top: 18px;
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      text-align: center;
+      font-weight: 500;
+    }
+    .status-msg.success { background: #e0f5ea; color: var(--green-dark); border: 1px solid var(--green-light); display: block; }
+    .status-msg.error   { background: #ffe5e5; color: #c00; border: 1px solid #f99; display: block; }
+    .status-msg.loading { background: #fff8e0; color: #7a5c00; border: 1px solid var(--gold); display: block; }
+
+    .spinner { display: inline-block; width: 15px; height: 15px; border: 2px solid rgba(0,0,0,0.2); border-top-color: currentColor; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-left: 8px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">Dawat-e-Islami &middot; JTM Scholars Program</div>
+  <h1>Career Assessment Form</h1>
+  <div class="header-sub">Career Assessment &amp; Preferences &nbsp;|&nbsp; Counsellor: Dr. Kaish Q Khan (Qais Attari), KIIT</div>
+  <div class="gold-line"></div>
+</div>
+
+<div class="container">
+  <form id="assessmentForm" novalidate>
+
+    <!-- PART 0: Personal Info -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-num">0</div>
+        <div>
+          <div class="section-title">Zaati Maloomat</div>
+          <div class="section-subtitle">Personal Information</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Naam <span style="font-weight:400;color:var(--text-mid)">(Name)</span></label>
+            <input type="text" name="name" placeholder="Pura naam likhein" required />
+          </div>
+
+          <div class="form-group">
+            <label>Umar <span style="font-weight:400;color:var(--text-mid)">(Age)</span></label>
+            <input type="number" name="age" placeholder="Umar darj karein" min="10" max="60" />
+          </div>
+
+          <div class="form-group">
+            <label>Class / Specialization</label>
+            <input type="text" name="class_specialization" placeholder="Maslan: Daura-e-Hadith" />
+          </div>
+
+          <div class="form-group">
+            <label>School Education</label>
+            <input type="text" name="school_education" placeholder="Maslan: Matric, Inter" />
+          </div>
+
+          <div class="form-group">
+            <label>Maloom Zabanein <span style="font-weight:400;color:var(--text-mid)">(Languages Known)</span></label>
+            <input type="text" name="languages_known" placeholder="Maslan: Urdu, Arabic, English" />
+          </div>
+
+          <div class="form-group">
+            <label>Walidain ka Pesha <span style="font-weight:400;color:var(--text-mid)">(Parent's Profession)</span></label>
+            <input type="text" name="parents_profession" placeholder="Walid/Walida ka pesha" />
+          </div>
+
+          <div class="form-group">
+            <label>Dawat-e-Islami mein Waqt <span style="font-weight:400;color:var(--text-mid)">(Time in Dawat-e-Islami)</span></label>
+            <input type="text" name="time_in_dawateislami" placeholder="Maslan: 5 saal" />
+          </div>
+
+          <div class="form-group">
+            <label>Role Model Career Person</label>
+            <input type="text" name="role_model" placeholder="Kisi ka naam" />
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- PART 1: Skills -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div>
+          <div class="section-title">Salahiyaton ka Jaiza</div>
+          <div class="section-subtitle">Part 1: Self-Assessment of Skills — Kamzor / Ausat / Mazboot</div>
+        </div>
+      </div>
+      <div class="section-body">
+
+        <div class="skill-row">
+          <div class="skill-name">
+            <div class="main">Awami Guftagu / Taqreer</div>
+            <div class="sub">Public Speaking / Oratory</div>
+          </div>
+          <div class="skill-options">
+            <div class="skill-option"><input type="radio" name="skill_public_speaking" id="ps_w" value="Weak" /><label for="ps_w">Kamzor</label></div>
+            <div class="skill-option"><input type="radio" name="skill_public_speaking" id="ps_a" value="Average" /><label for="ps_a">Ausat</label></div>
+            <div class="skill-option"><input type="radio" name="skill_public_speaking" id="ps_s" value="Strong" /><label for="ps_s">Mazboot</label></div>
+          </div>
+        </div>
+
+        <div class="skill-row">
+          <div class="skill-name">
+            <div class="main">Tehreer aur Mazmoon Nigari</div>
+            <div class="sub">Writing &amp; Essay Composition</div>
+          </div>
+          <div class="skill-options">
+            <div class="skill-option"><input type="radio" name="skill_writing" id="wr_w" value="Weak" /><label for="wr_w">Kamzor</label></div>
+            <div class="skill-option"><input type="radio" name="skill_writing" id="wr_a" value="Average" /><label for="wr_a">Ausat</label></div>
+            <div class="skill-option"><input type="radio" name="skill_writing" id="wr_s" value="Strong" /><label for="wr_s">Mazboot</label></div>
+          </div>
+        </div>
+
+        <div class="skill-row">
+          <div class="skill-name">
+            <div class="main">Logon ki Rehnumai (Counseling)</div>
+            <div class="sub">Mentorship &amp; Counseling</div>
+          </div>
+          <div class="skill-options">
+            <div class="skill-option"><input type="radio" name="skill_counseling" id="co_w" value="Weak" /><label for="co_w">Kamzor</label></div>
+            <div class="skill-option"><input type="radio" name="skill_counseling" id="co_a" value="Average" /><label for="co_a">Ausat</label></div>
+            <div class="skill-option"><input type="radio" name="skill_counseling" id="co_s" value="Strong" /><label for="co_s">Mazboot</label></div>
+          </div>
+        </div>
+
+        <div class="skill-row">
+          <div class="skill-name">
+            <div class="main">Masail ko Suljhana</div>
+            <div class="sub">Mediation &amp; Problem Solving</div>
+          </div>
+          <div class="skill-options">
+            <div class="skill-option"><input type="radio" name="skill_mediation" id="me_w" value="Weak" /><label for="me_w">Kamzor</label></div>
+            <div class="skill-option"><input type="radio" name="skill_mediation" id="me_a" value="Average" /><label for="me_a">Ausat</label></div>
+            <div class="skill-option"><input type="radio" name="skill_mediation" id="me_s" value="Strong" /><label for="me_s">Mazboot</label></div>
+          </div>
+        </div>
+
+        <div class="skill-row">
+          <div class="skill-name">
+            <div class="main">Technology aur AI ka Istemaal</div>
+            <div class="sub">Use of Technology &amp; Basic AI</div>
+          </div>
+          <div class="skill-options">
+            <div class="skill-option"><input type="radio" name="skill_technology" id="te_w" value="Weak" /><label for="te_w">Kamzor</label></div>
+            <div class="skill-option"><input type="radio" name="skill_technology" id="te_a" value="Average" /><label for="te_a">Ausat</label></div>
+            <div class="skill-option"><input type="radio" name="skill_technology" id="te_s" value="Strong" /><label for="te_s">Mazboot</label></div>
+          </div>
+        </div>
+
+        <div class="skill-row">
+          <div class="skill-name">
+            <div class="main">Intizami Umoor</div>
+            <div class="sub">Administrative &amp; Management Skills</div>
+          </div>
+          <div class="skill-options">
+            <div class="skill-option"><input type="radio" name="skill_admin" id="ad_w" value="Weak" /><label for="ad_w">Kamzor</label></div>
+            <div class="skill-option"><input type="radio" name="skill_admin" id="ad_a" value="Average" /><label for="ad_a">Ausat</label></div>
+            <div class="skill-option"><input type="radio" name="skill_admin" id="ad_s" value="Strong" /><label for="ad_s">Mazboot</label></div>
+          </div>
+        </div>
+
+        <div class="skill-row">
+          <div class="skill-name">
+            <div class="main">Nayi Zabanain Seekhna</div>
+            <div class="sub">Learning New Languages (English, Arabic, etc.)</div>
+          </div>
+          <div class="skill-options">
+            <div class="skill-option"><input type="radio" name="skill_languages" id="la_w" value="Weak" /><label for="la_w">Kamzor</label></div>
+            <div class="skill-option"><input type="radio" name="skill_languages" id="la_a" value="Average" /><label for="la_a">Ausat</label></div>
+            <div class="skill-option"><input type="radio" name="skill_languages" id="la_s" value="Strong" /><label for="la_s">Mazboot</label></div>
+          </div>
+        </div>
+
+        <div class="skill-row">
+          <div class="skill-name">
+            <div class="main">Tehqeeq aur Mutaliya</div>
+            <div class="sub">In-depth Research &amp; Deep Reading</div>
+          </div>
+          <div class="skill-options">
+            <div class="skill-option"><input type="radio" name="skill_research" id="re_w" value="Weak" /><label for="re_w">Kamzor</label></div>
+            <div class="skill-option"><input type="radio" name="skill_research" id="re_a" value="Average" /><label for="re_a">Ausat</label></div>
+            <div class="skill-option"><input type="radio" name="skill_research" id="re_s" value="Strong" /><label for="re_s">Mazboot</label></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PART 2: Career Tracks -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div>
+          <div class="section-title">Career Tracks of Interest</div>
+          <div class="section-subtitle">Part 2: 2030s Career Tracks — Jin fields mein mustaqbil dekhna chahte hain</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="career-options">
+
+          <label class="career-option">
+            <input type="checkbox" name="career_tracks" value="Traditional Islamic Academia" />
+            <div class="career-check-box"></div>
+            <div class="career-text">
+              <div class="main">Riwayati Deeni Khidmat (Taleem, Ifta, Tasnif)</div>
+              <div class="sub">Traditional Islamic Academia — Teaching, Fatawa, Authorship</div>
+            </div>
+          </label>
+
+          <label class="career-option">
+            <input type="checkbox" name="career_tracks" value="Modern Educational Leadership" />
+            <div class="career-check-box"></div>
+            <div class="career-text">
+              <div class="main">Jadeed Taleemi Qayadat (School Administration)</div>
+              <div class="sub">Modern Educational Leadership — Managing Schools &amp; Curricula</div>
+            </div>
+          </label>
+
+          <label class="career-option">
+            <input type="checkbox" name="career_tracks" value="Digital Islamic Media & EdTech" />
+            <div class="career-check-box"></div>
+            <div class="career-text">
+              <div class="main">Digital Media aur Content Creation (Podcasts, EdTech)</div>
+              <div class="sub">Digital Islamic Media &amp; Educational Technology</div>
+            </div>
+          </label>
+
+          <label class="career-option">
+            <input type="checkbox" name="career_tracks" value="Halal Career Counseling & Mentorship" />
+            <div class="career-check-box"></div>
+            <div class="career-text">
+              <div class="main">Naujawanon ki Tarbiyat aur Counseling</div>
+              <div class="sub">Halal Career Counseling &amp; Psychological Mentorship</div>
+            </div>
+          </label>
+
+          <label class="career-option">
+            <input type="checkbox" name="career_tracks" value="Corporate Shariah Compliance & Auditing" />
+            <div class="career-check-box"></div>
+            <div class="career-text">
+              <div class="main">Halal Industry Compliance (Islamic Banking, Halal Auditing)</div>
+              <div class="sub">Corporate Shariah Compliance &amp; Auditing</div>
+            </div>
+          </label>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- PART 3: Priorities -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div>
+          <div class="section-title">Tarjeehaat ki Darajabandi</div>
+          <div class="section-subtitle">Part 3: Job Priorities — 1 = Sab se Aham, 5 = Kam Aham</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="priority-note">⚠️ Har tarjeeh ko 1 se 5 tak rank karein. Har number sirf ek baar istemaal karein.</div>
+        <div class="priority-rows">
+
+          <div class="priority-row">
+            <select name="priority_financial" required>
+              <option value="">—</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            </select>
+            <div class="priority-text">
+              <div class="main">Maali Istehkam (Financial Stability &amp; High Income)</div>
+              <div class="sub">Earning potential to support family and life goals</div>
+            </div>
+          </div>
+
+          <div class="priority-row">
+            <select name="priority_worklife" required>
+              <option value="">—</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            </select>
+            <div class="priority-text">
+              <div class="main">Waqt ki Azadi (Flexible Hours / Work-Life Balance)</div>
+              <div class="sub">Control over schedule — Dawah, family, and personal time</div>
+            </div>
+          </div>
+
+          <div class="priority-row">
+            <select name="priority_social_impact" required>
+              <option value="">—</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            </select>
+            <div class="priority-text">
+              <div class="main">Muashere par Asar (Social Impact &amp; Community Leadership)</div>
+              <div class="sub">Roles that directly guide and improve the community</div>
+            </div>
+          </div>
+
+          <div class="priority-row">
+            <select name="priority_intellectual" required>
+              <option value="">—</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            </select>
+            <div class="priority-text">
+              <div class="main">Zati aur Ilmi Taraqqī (Personal &amp; Intellectual Growth)</div>
+              <div class="sub">Jobs requiring constant learning, research, and skill development</div>
+            </div>
+          </div>
+
+          <div class="priority-row">
+            <select name="priority_sunnah" required>
+              <option value="">—</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            </select>
+            <div class="priority-text">
+              <div class="main">Mahol ki Mutabqat (Strict Adherence to Sunnah in Workplace)</div>
+              <div class="sub">Work environment fully aligned with personal religious practices</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-wrap">
+      <button type="submit" class="btn-submit" id="submitBtn">Form Jama Karein &rarr;</button>
+      <div class="status-msg" id="statusMsg"></div>
+    </div>
+
+  </form>
+</div>
+
+<script>
+  // ⚠️ Replace with your deployed Google Apps Script Web App URL
+  const SCRIPT_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+  document.getElementById("assessmentForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById("submitBtn");
+    const statusMsg = document.getElementById("statusMsg");
+
+    const name = this.elements["name"].value.trim();
+    if (!name) {
+      statusMsg.className = "status-msg error";
+      statusMsg.textContent = "⚠️ Apna naam zaroor darj karein.";
+      return;
+    }
+
+    const skillFields = ["skill_public_speaking","skill_writing","skill_counseling","skill_mediation","skill_technology","skill_admin","skill_languages","skill_research"];
+    for (let f of skillFields) {
+      if (!this.querySelector(`input[name="${f}"]:checked`)) {
+        statusMsg.className = "status-msg error";
+        statusMsg.textContent = "⚠️ Tamam salahiyaton ki darajabandi mukammal karein.";
+        return;
+      }
+    }
+
+    const careerChecked = [...this.querySelectorAll('input[name="career_tracks"]:checked')].map(c => c.value);
+    if (careerChecked.length === 0) {
+      statusMsg.className = "status-msg error";
+      statusMsg.textContent = "⚠️ Kam az kam ek career track zaroor chunein.";
+      return;
+    }
+
+    const priorityFields = ["priority_financial","priority_worklife","priority_social_impact","priority_intellectual","priority_sunnah"];
+    const prVals = priorityFields.map(f => this.elements[f].value);
+    if (prVals.some(v => !v)) {
+      statusMsg.className = "status-msg error";
+      statusMsg.textContent = "⚠️ Tamam tarjeehaat ko 1 se 5 tak rank karein.";
+      return;
+    }
+    if (new Set(prVals).size !== 5) {
+      statusMsg.className = "status-msg error";
+      statusMsg.textContent = "⚠️ Har tarjeeh ka number mukhtalif hona chahiye (1 se 5, har ek ek baar).";
+      return;
+    }
+
+    const payload = {
+      Timestamp:               new Date().toLocaleString("en-PK"),
+      Naam:                    name,
+      Umar:                    this.elements["age"].value,
+      Class_Specialization:    this.elements["class_specialization"].value,
+      School_Education:        this.elements["school_education"].value,
+      Languages_Known:         this.elements["languages_known"].value,
+      Parents_Profession:      this.elements["parents_profession"].value,
+      Time_in_DawateIslami:    this.elements["time_in_dawateislami"].value,
+      Role_Model:              this.elements["role_model"].value,
+      Skill_Public_Speaking:   this.querySelector('input[name="skill_public_speaking"]:checked').value,
+      Skill_Writing:           this.querySelector('input[name="skill_writing"]:checked').value,
+      Skill_Counseling:        this.querySelector('input[name="skill_counseling"]:checked').value,
+      Skill_Mediation:         this.querySelector('input[name="skill_mediation"]:checked').value,
+      Skill_Technology:        this.querySelector('input[name="skill_technology"]:checked').value,
+      Skill_Admin:             this.querySelector('input[name="skill_admin"]:checked').value,
+      Skill_Languages:         this.querySelector('input[name="skill_languages"]:checked').value,
+      Skill_Research:          this.querySelector('input[name="skill_research"]:checked').value,
+      Career_Tracks:           careerChecked.join(", "),
+      Priority_Financial:      this.elements["priority_financial"].value,
+      Priority_WorkLife:       this.elements["priority_worklife"].value,
+      Priority_Social_Impact:  this.elements["priority_social_impact"].value,
+      Priority_Intellectual:   this.elements["priority_intellectual"].value,
+      Priority_Sunnah:         this.elements["priority_sunnah"].value,
+    };
+
+    btn.disabled = true;
+    statusMsg.className = "status-msg loading";
+    statusMsg.innerHTML = 'Data save ho raha hai… <span class="spinner"></span>';
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      statusMsg.className = "status-msg success";
+      statusMsg.textContent = "✅ Aap ka form kamyabi se jama ho gaya! Jazak Allah Khairan.";
+      document.getElementById("assessmentForm").reset();
+    } catch (err) {
+      statusMsg.className = "status-msg error";
+      statusMsg.textContent = "❌ Kuch ghalti hui. Dobara koshish karein.";
+    } finally {
+      btn.disabled = false;
+    }
+  });
+</script>
+
+</body>
+</html>
